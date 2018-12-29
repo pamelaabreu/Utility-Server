@@ -1,7 +1,6 @@
 const {add,multiply} = require('./services/math.js');
 const {searchGif} = require('./services/gif.js');
 const express = require('express');
-const request = require('request');
 const app = express();
 const port = 44444;
 
@@ -31,11 +30,10 @@ app.get('/math/multiply', (req, res) => {
 
 app.get('/gif', (req, res) => {
     const {query} = req;
-    // if(req.query !== 'search'){
-    //     res.json({error: `You didn't write a search`});
-    // }
 
-    res.json(searchGif(query.search))
+    searchGif(query.search, urls => {
+        res.json(urls)
+    })
 })
 
 app.listen(port, () => {
@@ -46,5 +44,13 @@ app.listen(port, () => {
 /*NOTES:
     If user inputs ?a=1&a=2,&a=2,
     req.query.a will be [1,2,2]
+
+    If user doesn't write search...
+    if(req.query !== 'search'){
+        res.json({error: `You didn't write a search`});
+    }
+
+    The math functions are violating DRY
+    implement a modular for loop...
 
 */
